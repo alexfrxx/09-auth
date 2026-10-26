@@ -103,6 +103,6 @@ export async function logout(): Promise<void> {
 }
 
 export async function updateMe({ username }: UpdateData): Promise<User> {
-  const response = await nextServer.patch('/users/me', username);
+  const response = await nextServer.patch('/users/me', { username });
   return response.data;
 }

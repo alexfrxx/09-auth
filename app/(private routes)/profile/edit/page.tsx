@@ -22,6 +22,7 @@ export default function Edit() {
         return;
       }
       const res = await updateMe({ username: username.trim() });
+      setUser(res);
     } catch (error) {
       setError('Some error, please try again');
     }
