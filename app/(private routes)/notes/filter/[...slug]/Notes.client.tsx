@@ -2,14 +2,13 @@
 
 import { useState } from 'react';
 import { useDebounce } from 'use-debounce';
-import { useParams } from 'next/navigation';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import Link from 'next/link';
-import { fetchNotes } from '../../../../lib/api';
-import NoteList from '../../../../components/NoteList/NoteList';
-import Pagination from '../../../../components/Pagination/Pagination';
+import { fetchNotes } from '../../../../../lib/api/clientApi';
+import NoteList from '../../../../../components/NoteList/NoteList';
+import Pagination from '../../../../../components/Pagination/Pagination';
 import css from './NotesPage.module.css';
-import SearchBox from '../../../../components/SearchBox/SearchBox';
+import SearchBox from '../../../../../components/SearchBox/SearchBox';
 
 type Props = {
   tag: string | undefined;
