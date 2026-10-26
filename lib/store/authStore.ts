@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import User from '@/types/user';
+import type { User } from '@/types/user';
 
 type UserDraftStore = {
   user: User;
@@ -19,7 +19,7 @@ export const useUserStore = create<UserDraftStore>()(
   persist(
     (set) => ({
       user: initialDraft,
-      isAuthenticated: true,
+      isAuthenticated: false,
       setUser: (user) => set(() => ({ user: user, isAuthenticated: true })),
       clearIsAuthenticated: () =>
         set(() => ({ user: initialDraft, isAuthenticated: false }))
@@ -27,4 +27,3 @@ export const useUserStore = create<UserDraftStore>()(
     { name: 'user', partialize: (state) => ({ user: state.user }) }
   )
 );
-2;

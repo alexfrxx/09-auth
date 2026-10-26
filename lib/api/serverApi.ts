@@ -2,9 +2,7 @@ import { cookies } from 'next/headers';
 import { nextServer } from './api';
 import type { Note, PostNote } from '../../types/note';
 import type { FetchNotesProps, SearchNotesProps } from './clientApi';
-import User from '@/types/user';
-
-const key = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
+import type { User } from '@/types/user';
 
 export async function checkServerSession() {
   const cookieStore = await cookies();
@@ -18,9 +16,9 @@ export async function checkServerSession() {
 
 export async function getServerMe(): Promise<User> {
   const cookieStore = await cookies();
-  const { data } = await nextServer.get('/auth/me', {
+  const { data } = await nextServer.get('/users/me', {
     headers: {
-      Cookie: cookieStore.toString()
+      Cookies: cookieStore.toString()
     }
   });
   return data;
@@ -28,15 +26,11 @@ export async function getServerMe(): Promise<User> {
 
 export async function fetchNoteById(id: string): Promise<Note> {
   const cookieStore = await cookies();
-  const response = await nextServer.get<Note>(
-    `https://notehub-public.goit.study/api/notes/${id}`,
-    {
-      headers: {
-        Authorization: `Bearer ${key}`,
-        Cookie: cookieStore.toString()
-      }
+  const response = await nextServer.get<Note>(`/notes/${id}`, {
+    headers: {
+      Cookies: cookieStore.toString()
     }
-  );
+  });
   return response.data;
 }
 
@@ -47,20 +41,16 @@ export async function fetchNotes({
   tag
 }: SearchNotesProps): Promise<FetchNotesProps> {
   const cookieStore = await cookies();
-  const response = await nextServer.get<FetchNotesProps>(
-    `https://notehub-public.goit.study/api/notes`,
-    {
-      params: {
-        search,
-        page,
-        perPage,
-        tag
-      },
-      headers: {
-        Authorization: `Bearer ${key}`,
-        Cookie: cookieStore.toString()
-      }
+  const response = await nextServer.get<FetchNotesProps>('/notes', {
+    params: {
+      search,
+      page,
+      perPage,
+      tag
+    },
+    headers: {
+      Cookies: cookieStore.toString()
     }
-  );
+  });
   return response.data;
 }

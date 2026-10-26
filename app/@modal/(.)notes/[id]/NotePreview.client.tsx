@@ -18,9 +18,9 @@ export default function NotePreviewClient() {
     refetchOnMount: false
   });
 
-  if (isLoading) return <p></p>;
+  if (isLoading) return <p>Loading...</p>;
 
-  if (isError || !data) return <p></p>;
+  if (isError || !data) return <p>Some error, please try again later</p>;
 
   return (
     <Modal onClose={close}>
@@ -32,6 +32,9 @@ export default function NotePreviewClient() {
           <p className={css.tag}>{data.tag}</p>
           <p className={css.content}>{data.content}</p>
           <p className={css.date}>{data.createdAt}</p>
+          <button onClick={close} className={css.backBtn}>
+            Close
+          </button>
         </div>
       </div>
     </Modal>

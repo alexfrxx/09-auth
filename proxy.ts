@@ -4,7 +4,7 @@ import { parseSetCookie } from 'cookie';
 import { checkServerSession } from './lib/api/serverApi';
 
 const privateRoutes = ['/profile'];
-const publicRoutes = ['sign-in', 'sign-up'];
+const publicRoutes = ['/sign-in', '/sign-up'];
 
 export async function proxy(request: NextRequest) {
   const cookieStore = await cookies();
@@ -14,11 +14,11 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const isPublicRoute = publicRoutes.some((route) => {
-    pathname.startsWith(route);
+    return pathname.startsWith(route);
   });
 
   const isPrivateRoute = privateRoutes.some((route) => {
-    pathname.startsWith(route);
+    return pathname.startsWith(route);
   });
 
   if (!accessToken) {
@@ -70,5 +70,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/profile:path*', '/sign-in', '/sign-up']
+  matcher: ['/profile/:path*', '/sign-in', '/sign-up']
 };

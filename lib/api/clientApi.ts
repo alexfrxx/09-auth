@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { Note, PostNote } from '../../types/note';
 import { nextServer } from './api';
-import User from '@/types/user';
+import type { User } from '@/types/user';
 
 const key = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
 
@@ -19,8 +19,11 @@ export interface SearchNotesProps {
 
 export type RegisterData = {
   email: string;
-  username: string;
   password: string;
+};
+
+export type UpdateData = {
+  username: string;
 };
 
 export type SessionType = {
@@ -33,58 +36,45 @@ export async function fetchNotes({
   perPage,
   tag
 }: SearchNotesProps): Promise<FetchNotesProps> {
-  const response = await nextServer.get<FetchNotesProps>(
-    `https://notehub-public.goit.study/api/notes`,
-    {
-      params: {
-        search,
-        page,
-        perPage,
-        tag
-      },
-      headers: {
-        Authorization: `Bearer ${key}`
-      }
+  const response = await nextServer.get<FetchNotesProps>('/notes', {
+    params: {
+      search,
+      page,
+      perPage,
+      tag
+    },
+    headers: {
+      Authorization: `Bearer ${key}`
     }
-  );
+  });
   return response.data;
 }
 
 export async function postNote(object: PostNote): Promise<Note> {
-  const response = await nextServer.post<Note>(
-    `https://notehub-public.goit.study/api/notes`,
-    object,
-    {
-      headers: {
-        Authorization: `Bearer ${key}`
-      }
+  const response = await nextServer.post<Note>('/notes', object, {
+    headers: {
+      Authorization: `Bearer ${key}`
     }
-  );
+  });
   return response.data;
 }
 
 export async function deleteNote(id: string): Promise<Note> {
-  const response = await nextServer.delete<Note>(
-    `https://notehub-public.goit.study/api/notes/${id}`,
-    {
-      headers: {
-        Authorization: `Bearer ${key}`
-      }
+  const response = await nextServer.delete<Note>(`/notes/${id}`, {
+    headers: {
+      Authorization: `Bearer ${key}`
     }
-  );
+  });
 
   return response.data;
 }
 
 export async function fetchNoteById(id: string): Promise<Note> {
-  const response = await nextServer.get<Note>(
-    `https://notehub-public.goit.study/api/notes/${id}`,
-    {
-      headers: {
-        Authorization: `Bearer ${key}`
-      }
+  const response = await nextServer.get<Note>(`/notes/${id}`, {
+    headers: {
+      Authorization: `Bearer ${key}`
     }
-  );
+  });
   return response.data;
 }
 
@@ -103,11 +93,16 @@ export async function checkSession() {
   return response.data.success;
 }
 
-export async function getMe() {
-  const { data } = await nextServer.get<User>('/auth/me');
+export async function getMe(): Promise<User> {
+  const { data } = await nextServer.get<User>('/users/me');
   return data;
 }
 
 export async function logout(): Promise<void> {
   await nextServer.post('/auth/logout');
+}
+
+export async function updateMe({ username }: UpdateData): Promise<User> {
+  const response = await nextServer.patch('/users/me', username);
+  return response.data;
 }
